@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+#export DH_VERBOSE=1
+# To prevent bogus linkage.
+LDFLAGS += -Wl,--as-needed
+# Exported variable to make sure that we don't use cursor control in the tests.
+export TRAVIS = bogus
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_build:
+	# rerun flex/bison to regenerate their output for DFSG reasons
+#	./hphp/parser/make-lexer.sh
+#	./hphp/parser/make-parser.sh
+#	VERBOSE=1 dh_auto_build
+	make -j 24
+
+override_dh_auto_configure:
+	printenv
+	echo $(LDFLAGS)
+	dh_auto_configure -- \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-CMAKE_LIBRARY_PATH="/usr/lib/hhvm/" \
+		-DMYSQL_UNIX_SOCK_ADDR=/var/run/mysqld/mysqld.sock \
+
+#ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+#override_dh_auto_test:
+#	hphp/hhvm/hhvm hphp/test/run -m jit quick
+#	hphp/hhvm/hhvm hphp/test/run -m interp quick
+#endif
+
+#override_dh_gencontrol:
+#	hhvmapi=$(shell $(CURDIR)/debian/hhvm/usr/bin/hhvm --version | sed -ne 's/^Extension API:\ //p') && \
+#		[ -n "$${hhvmapi}" ] && echo "hhvm:ApiVersion=hhvm-api-$${hhvmapi}" >> debian/hhvm.substvars
+#	dh_gencontrol
+
+#override_dh_strip:
+#	dh_strip --dbg-package=hhvm-dbg
+
+override_dh_auto_install:
+	install -d debian/hhvm/etc/hhvm
+	install -d debian/hhvm/etc/hhvm/fcgi
+	install -d debian/hhvm/var/log/hhvm
+override_dh_fixperms:
+		dh_fixperms
+		test -d debian/hhvm && \
+			chown www-data:www-data \
+			debian/hhvm/var/log/hhvm || true
+
+#.PHONY: override_dh_auto_build override_dh_auto_configure override_dh_auto_test override_dh_strip override_dh_fixperms override_dh_gencontrol

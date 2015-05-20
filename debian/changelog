@@ -1,0 +1,141 @@
+hhvm (3.6.2~eleme) trusty; urgency=medium
+  * patches:
+    - Added a path to support time
+ -- itnihao <admin@ele.me> Wed, 20 May 2015 14:58:09 +0800
+
+hhvm (3.6.1+dfsg1-1+wm1) trusty-wikimedia; urgency=medium
+
+  [ Giuseppe Lavagetto ]
+  * New upstream release (3.6.1)
+  * Added WMF patch to support streaming output in FastCGI 
+  * Added patches to build correctly
+
+  [ Alexandros Kosiaris ]
+  * Rebuild with hhvm-dev Depends field populated better
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Thu, 16 Apr 2015 12:09:55 +0200
+
+hhvm (3.3.1+dfsg1-1+wm3-1) trusty-wikimedia; urgency=medium
+
+  * debian/patches:
+    - Added a patch to allow a new version of the LRU PCRE cache
+    - Added a patch to fix a memory leak for bitwise string operations
+  * Fixed the upstart/init scripts to use a single ini file
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Thu, 15 Jan 2015 16:04:39 +0100
+
+hhvm (3.3.1+dfsg1-1+wm1) trusty-wikimedia; urgency=medium
+
+  * Upgrade to 3.3.1
+  * Add a fix for a libbost memleak on trusty
+  * Add a fix for wddx serialization
+  * Make HHVM use the system tzinfo
+  * remove build-dep alternative for libjpeg62-dev which was confusing trusty
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Wed, 17 Dec 2014 10:46:22 +0100
+
+hhvm (3.3.0+dfsg1-1+wm5) trusty-wikimedia; urgency=medium
+
+  * Add EZC fixes from https://github.com/facebook/hhvm/pull/4330  
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Tue, 02 Dec 2014 13:26:32 +0100
+
+hhvm (3.3.0+dfsg1-1+wm4) trusty-wikimedia; urgency=medium
+
+  * Add the /jemalloc-status endpoint to the admin server 
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Mon, 10 Nov 2014 13:25:11 +0100
+
+hhvm (3.3.0+dfsg1-1+wm3.1) trusty-wikimedia; urgency=medium
+
+  * Rebuild with RelWithDebInfo 
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Fri, 07 Nov 2014 06:28:27 +0100
+
+hhvm (3.3.0+dfsg1-1+wm3) trusty-wikimedia; urgency=medium
+  [Wikimedia specific]
+  * debian/patches:
+    - Added a patch to fix the memleaks and the segfaults with domDocument
+    - Added patch to fix the restart behaviour of HHVM 
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Thu, 06 Nov 2014 09:57:59 +0100
+
+hhvm (3.3.0+dfsg1-1+wm1) trusty-wikimedia; urgency=medium
+  [ Giuseppe Lavagetto ]
+  * Updated to version 3.3.0
+  * debian/patches:
+    - Removed all patches obsoleted by 3.3.0
+    - Updated remaining patches so that they apply cleanly
+    - Use system-provided pcre library
+    - Fixed the config file path that is broken in 3.3.0
+    - Backported some patches from upstream for stability/functionality
+
+  [ Wikimedia specific ]
+  * Rebased the source on upstream
+  * Added WMF-specific patches for PCRE and sweepers init
+  * Added the upstart script and updated the init script
+
+ -- Giuseppe Lavagetto <glavagetto@wikimedia.org>  Tue, 21 Oct 2014 12:00:22 +0200
+
+hhvm (3.2.0+dfsg1-2) unstable; urgency=medium
+
+   [ Faidon Liambotis ]
+   * Fix the build system to be able to build a release build but with
+     debugging symbols (which we subsequently strip into hhvm-dbg), and pass
+     -DCMAKE_BUILD_TYPE=RelWithDebInfo to configure.
+
+  [ David Martínez Moreno ]
+  * Remove the chmod 750 on /var/log/hhvm as it's really an error on the HHVM
+    packaging.
+  * debian/patches:
+    - disable_quicklz_code: Disable the qlz* primitives, as they are
+      GPL-licensed code linked to PHP-licensed one.
+    - static_linking_against_libbfd: Static linking against libbfd per
+      binutils-dev, backported from HEAD.
+    - add_additional_includes_imagemagick: New ImageMagick broke the build,
+      so add the arch includes to the build.
+  * debian/copyright: Fixed some mistakes discovered with latest lintian.
+  * debian/control: Bumped Standards-Version to to 3.9.6 (no changes)
+  * Added an additional override for lintian on PHP license, with comment.
+
+ -- David Martínez Moreno <ender@debian.org>  Thu, 16 Oct 2014 05:01:02 -0700
+
+hhvm (3.2.0+dfsg1-1) unstable; urgency=low
+
+  [ David Martínez Moreno ]
+  * Initial release.  Lots of thanks to Faidon Liambotis, without whom this
+    would have been way worse than it was.  This has been a many-month effort
+    and he was pushing all over the place.  Also I'm extending my thanks to
+    my coworker at Facebook Paul Tarjan to make me not forget about HHVM. I
+    can't believe it's done! (closes: #727085).
+  * Prepared a new 3.2.0 release without libzip, lz4 and such, and update
+    TODO.  There's a script in debian/repack to make new tarballs from the
+    upstream ones.
+  * Added debian/repack to create DFSG-compliant tarballs.
+  * Added debian/README.source to cover the above procedure.
+  * debian/rules: Build the package with -Wl,--as-needed to remove a couple of
+    bogus dependencies,
+  * debian/patches:
+    - fix_freetype_include: Bad include in libgd.
+    - use_system_libzip: Use the system's libzip.
+    - typos: Lots of typos, most of them detected by lintian. Added the
+      false positives to a lintian override file.
+    - use_system_libsqlite: Use the system's libsqlite3.
+    - fix_hphp_lexer: Add a missing semicolon in the HPHP lexer, already
+      merged upstream.
+    - link_libiconv_hook: The iconv library in Debian is called libiconv_hook,
+      so change the CMake detection script to account for that.
+    - fix_ldflags: Fix LDFLAGS injection of hardening flags.
+  * Copied from upstream git debian/hhvm.1.ronn and converted for now to
+    troff, and imported manually too hh_client/hh_server into debian/.
+  * debian/postinst: Make HHVM an alternative with score 40 for php.
+
+  [ Faidon Liambotis ]
+  * debian/patches:
+    - use_system_lz4: Use the system's liblz4.
+    - use_system_double-conversion: Use the system's double-conversion
+      library and remove the one in third-party.
+    - public_headers_system: add header files from hphp/system/ too as at
+      least systemlib.h is needed to build an extension.
+
+ -- David Martínez Moreno <ender@debian.org>  Fri, 05 Sep 2014 15:55:18 -0700
