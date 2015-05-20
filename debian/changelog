@@ -3,8 +3,7 @@ hhvm (3.6.2~eleme) trusty; urgency=medium
     - Added a path to support time
  -- itnihao <admin@ele.me> Wed, 20 May 2015 14:58:09 +0800
 
-hhvm (3.6.1+dfsg1-1+wm1) trusty-wikimedia; urgency=medium
-
+hhvm (3.6.1) trusty;
   [ Giuseppe Lavagetto ]
   * New upstream release (3.6.1)
   * Added WMF patch to support streaming output in FastCGI 
